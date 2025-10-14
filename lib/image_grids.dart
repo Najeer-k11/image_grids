@@ -3,25 +3,27 @@ import 'package:flutter/material.dart';
 class ImageGrid extends StatelessWidget {
   const ImageGrid({
     super.key,
-    required this.images,
+    required this.imageLinks,
     this.padding = 12,
     this.borderRadius = 24,
     this.emptyWidget,
     this.backgroundColor = Colors.white,
-    this.dividerColor = Colors.white
+    this.dividerColor = Colors.white,
+    this.height,
   });
-  final List<dynamic> images;
+  final List<dynamic> imageLinks;
   final double padding;
   final double borderRadius;
   final Widget? emptyWidget;
   final Color backgroundColor;
   final Color dividerColor;
+  final double? height;
 
   void sendToImageViewer(BuildContext context, {required int index}) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ImageViewer(images: images, index: index),
+        builder: (context) => ImageViewer(images: imageLinks, index: index),
       ),
     );
   }
@@ -33,7 +35,7 @@ class ImageGrid extends StatelessWidget {
       margin: EdgeInsets.all(padding),
       clipBehavior: Clip.antiAlias,
       width: sw - (2 * padding),
-      height: sw - (2 * padding),
+      height: (height ?? sw) - (2 * padding),
       decoration: ShapeDecoration(
         color: backgroundColor,
         shape: RoundedSuperellipseBorder(
@@ -52,12 +54,12 @@ class ImageGrid extends StatelessWidget {
           //     ),
           //   ),
           // ],
-          if (images.isEmpty && emptyWidget != null) ...[
+          if (imageLinks.isEmpty && emptyWidget != null) ...[
             Expanded(child: emptyWidget!),
           ],
 
-          if (images.length <= 2) ...[
-            ...images.asMap().entries.map(
+          if (imageLinks.length <= 2) ...[
+            ...imageLinks.asMap().entries.map(
               (entry) => Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -73,14 +75,14 @@ class ImageGrid extends StatelessWidget {
             ),
           ],
 
-          if (images.length >= 3) ...[
+          if (imageLinks.length >= 3) ...[
             Expanded(
               child: GestureDetector(
                 onTap: () {
                   sendToImageViewer(context, index: 0);
                 },
                 child: Image.network(
-                  images.first,
+                  imageLinks.first,
                   width: sw,
                   fit: BoxFit.cover,
                 ),
@@ -92,12 +94,12 @@ class ImageGrid extends StatelessWidget {
               width: sw - (2 * padding),
               child: ListView.separated(
                 separatorBuilder: (context, index) {
-                  return SizedBox(width: 4,);
+                  return SizedBox(width: 4);
                 },
                 scrollDirection: Axis.horizontal,
-                itemCount: (images.length - 1) > 3 ? 3 : (images.length - 1),
+                itemCount: (imageLinks.length - 1) > 3 ? 3 : (imageLinks.length - 1),
                 itemBuilder: (context, index) {
-                  int numRemaining = images.length - 1; // After hero
+                  int numRemaining = imageLinks.length - 1; // After hero
                   int numShown = (numRemaining > 3) ? 3 : numRemaining;
                   int remImages = (numRemaining > 3) ? numRemaining - 3 : 0;
 
@@ -113,7 +115,7 @@ class ImageGrid extends StatelessWidget {
                           width: (sw - (2 * padding)) / 3,
                           height: (sw - (2 * padding)) / 3,
                           child: Image.network(
-                            images[index + 1],
+                            imageLinks[index + 1],
                             fit: BoxFit.cover,
                           ),
                         ),
