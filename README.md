@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: ImageGrid(
+        body: FlutterImageGrids(
           imageLinks: ["https://avatars.githubusercontent.com/u/93590694"],
         ),
       ),
