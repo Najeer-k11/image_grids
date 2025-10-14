@@ -1,0 +1,191 @@
+import 'package:flutter/material.dart';
+
+class ImageGrid extends StatelessWidget {
+  const ImageGrid({
+    super.key,
+    required this.images,
+    this.padding = 12,
+    this.borderRadius = 24,
+    this.emptyWidget,
+    this.backgroundColor = Colors.white,
+    this.dividerColor = Colors.white
+  });
+  final List<dynamic> images;
+  final double padding;
+  final double borderRadius;
+  final Widget? emptyWidget;
+  final Color backgroundColor;
+  final Color dividerColor;
+
+  void sendToImageViewer(BuildContext context, {required int index}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ImageViewer(images: images, index: index),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double sw = MediaQuery.sizeOf(context).width;
+    return Container(
+      margin: EdgeInsets.all(padding),
+      clipBehavior: Clip.antiAlias,
+      width: sw - (2 * padding),
+      height: sw - (2 * padding),
+      decoration: ShapeDecoration(
+        color: backgroundColor,
+        shape: RoundedSuperellipseBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+      ),
+      child: Column(
+        children: [
+          // if (true) ...[
+          //   Expanded(
+          //     child: Image.network(
+          //       images.first,
+          //       fit: BoxFit.cover,
+          //       width: sw,
+          //       height: sw,
+          //     ),
+          //   ),
+          // ],
+          if (images.isEmpty && emptyWidget != null) ...[
+            Expanded(child: emptyWidget!),
+          ],
+
+          if (images.length <= 2) ...[
+            ...images.asMap().entries.map(
+              (entry) => Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    sendToImageViewer(context, index: entry.key);
+                  },
+                  child: Image.network(
+                    entry.value,
+                    width: sw - (2 * padding),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ],
+
+          if (images.length >= 3) ...[
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  sendToImageViewer(context, index: 0);
+                },
+                child: Image.network(
+                  images.first,
+                  width: sw,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Divider(height: 4, color: dividerColor),
+            SizedBox(
+              height: (sw - (2 * padding)) * 0.32,
+              width: sw - (2 * padding),
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return SizedBox(width: 4,);
+                },
+                scrollDirection: Axis.horizontal,
+                itemCount: (images.length - 1) > 3 ? 3 : (images.length - 1),
+                itemBuilder: (context, index) {
+                  int numRemaining = images.length - 1; // After hero
+                  int numShown = (numRemaining > 3) ? 3 : numRemaining;
+                  int remImages = (numRemaining > 3) ? numRemaining - 3 : 0;
+
+                  bool isLast = index == (numShown - 1);
+
+                  return GestureDetector(
+                    onTap: () {
+                      sendToImageViewer(context, index: index + 1);
+                    },
+                    child: Stack(
+                      children: [
+                        SizedBox(
+                          width: (sw - (2 * padding)) / 3,
+                          height: (sw - (2 * padding)) / 3,
+                          child: Image.network(
+                            images[index + 1],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+
+                        if (isLast && remImages > 0) ...[
+                          Container(
+                            width: (sw - (2 * padding)) / 3,
+                            height: (sw - (2 * padding)) / 3,
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(
+                                0.4,
+                              ), // Slightly more opaque
+                            ),
+                            child: Center(
+                              child: Text(
+                                '+$remImages more', // Cleaner text
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class ImageViewer extends StatefulWidget {
+  final int index;
+  final List<dynamic> images;
+  const ImageViewer({super.key, required this.images, this.index = 0});
+
+  @override
+  State<ImageViewer> createState() => _ImageViewerState();
+}
+
+class _ImageViewerState extends State<ImageViewer> {
+  PageController pc = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+    pc = PageController(initialPage: widget.index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
+      body: PageView.builder(
+        controller: pc,
+        itemCount: widget.images.length,
+        itemBuilder: (context, index) {
+          String img = widget.images[index];
+          return InteractiveViewer(
+            maxScale: 2.5,
+            child: Image.network(img.toString()),
+          );
+        },
+      ),
+    );
+  }
+}
