@@ -1,7 +1,7 @@
 name: image_grids
-description: "A new Flutter package project."
+description: "Stylish Image Grids. Platform Independent UI package."
 version: 1.0.0
-homepage:
+homepage: "https://github.com/Najeer-k11/image_grids"
 
 environment:
   sdk: ^3.9.0
