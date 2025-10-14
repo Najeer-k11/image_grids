@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ImageGrid extends StatelessWidget {
-  const ImageGrid({
+class FlutterImageGrids extends StatelessWidget {
+  const FlutterImageGrids({
     super.key,
     required this.imageLinks,
     this.padding = 12,
