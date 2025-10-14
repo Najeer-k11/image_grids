@@ -8,7 +8,7 @@
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:image_grids/image_grids.dart';
+import 'package:flutter_image_grids/flutter_image_grids.dart';
 
 void main() {
   runApp(MyApp());
