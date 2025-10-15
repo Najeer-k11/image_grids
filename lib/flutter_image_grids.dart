@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+/// This is the main widget to call in your app.
 class FlutterImageGrids extends StatelessWidget {
+  /// Constructor which has some default values. Incase you don't want to modify.
   const FlutterImageGrids({
     super.key,
     required this.imageLinks,
@@ -11,14 +12,22 @@ class FlutterImageGrids extends StatelessWidget {
     this.dividerColor = Colors.white,
     this.height,
   });
+  /// This argument takes the image links array - At present we support only network images
   final List<dynamic> imageLinks;
+  /// [padding] is used for gaps between the [FlutterImageGrids] widget and outer widget
   final double padding;
+  /// [borderRadius] is used to define the roundness of the [FlutterImageGrids].
   final double borderRadius;
+  /// [emptyWidget] is a widget to display on the [FlutterImageGrids]. when images Links are empty.
   final Widget? emptyWidget;
+  /// background color for [FlutterImageGrids] 
   final Color backgroundColor;
+  /// divider color for 2 images separation
   final Color dividerColor;
+  /// we can height of the [FlutterImageGrids]
   final double? height;
 
+  /// Full screen Image viewer in this package only.
   void sendToImageViewer(BuildContext context, {required int index}) {
     Navigator.push(
       context,
@@ -125,8 +134,8 @@ class FlutterImageGrids extends StatelessWidget {
                             width: (sw - (2 * padding)) / 3,
                             height: (sw - (2 * padding)) / 3,
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(
-                                0.4,
+                              color: Colors.black.withAlpha(
+                                102,
                               ), // Slightly more opaque
                             ),
                             child: Center(
@@ -155,9 +164,14 @@ class FlutterImageGrids extends StatelessWidget {
   }
 }
 
+
+/// [ImageViewer] is defined for viewing all the images in a horizontal scrolling.
 class ImageViewer extends StatefulWidget {
+  /// index is used to show the that image when navigating to this page.
   final int index;
+  /// images is an array of network image links.
   final List<dynamic> images;
+  /// public constructor
   const ImageViewer({super.key, required this.images, this.index = 0});
 
   @override
