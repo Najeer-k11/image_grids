@@ -30,4 +30,4 @@ class MyApp extends StatelessWidget {
 
 ```
 
-![Alt text](https://raw.githubusercontent.com/Najeer-k11/flutter_image_grids/main/preview_images/flutter_image_grids_demo.png)
+![Alt text](https://raw.githubusercontent.com/Najeer-k11/image_grids/main/preview_images/flutter_image_grids_demo.png)
